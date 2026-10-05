@@ -1,0 +1,264 @@
+electronic||electronic|10
+house|electronic|house|1073
+electronica|electronic|electronica|1074
+downtempo|electronic|downtempo|1075
+techno|electronic|techno|1076
+electro|electronic|electro|1077
+dubstep|electronic|dubstep|1078
+beats|electronic|beats|1079
+dance|electronic|dance|1080
+idm|electronic|idm|1081
+drum-bass|electronic|drum & bass|1082
+breaks|electronic|breaks|1083
+trance|electronic|trance|1084
+glitch|electronic|glitch|1085
+chiptune|electronic|chiptune|1086
+chillwave|electronic|chillwave|1087
+dub|electronic|dub|1088
+edm|electronic|edm|1089
+instrumental|electronic|instrumental|1090
+witch-house|electronic|witch house|1091
+garage|electronic|garage|1092
+juke|electronic|juke|1093
+footwork|electronic|footwork|1094
+vaporwave|electronic|vaporwave|1095
+synthwave|electronic|synthwave|1096
+rock||rock|23
+indie|rock|indie|1206
+prog-rock|rock|prog rock|1207
+post-rock|rock|post-rock|1208
+rock-roll|rock|rock & roll|1209
+psychedelic-rock|rock|psychedelic rock|1210
+hard-rock|rock|hard rock|1211
+garage-rock|rock|garage rock|1212
+surf-rock|rock|surf rock|1213
+instrumental|rock|instrumental|1214
+math-rock|rock|math rock|1215
+rockabilly|rock|rockabilly|1216
+metal||metal|18
+hardcore|metal|hardcore|1156
+black-metal|metal|black metal|1157
+death-metal|metal|death metal|1158
+thrash-metal|metal|thrash metal|1159
+grindcore|metal|grindcore|1160
+doom|metal|doom|1161
+post-hardcore|metal|post hardcore|1162
+progressive-metal|metal|progressive metal|1163
+metalcore|metal|metalcore|1164
+sludge-metal|metal|sludge metal|1165
+heavy-metal|metal|heavy metal|1166
+deathcore|metal|deathcore|1167
+noise|metal|noise|1168
+alternative||alternative|2
+indie-rock|alternative|indie rock|1012
+industrial|alternative|industrial|1013
+shoegaze|alternative|shoegaze|1014
+grunge|alternative|grunge|1015
+goth|alternative|goth|1016
+dream-pop|alternative|dream pop|1017
+emo|alternative|emo|1018
+math-rock|alternative|math rock|1019
+britpop|alternative|britpop|1020
+jangle-pop|alternative|jangle pop|1021
+hip-hop-rap||hip-hop/rap|14
+rap|hip-hop-rap|rap|1120
+underground-hip-hop|hip-hop-rap|underground hip-hop|1121
+instrumental-hip-hop|hip-hop-rap|instrumental hip-hop|1122
+trap|hip-hop-rap|trap|1123
+conscious-hip-hop|hip-hop-rap|conscious hip-hop|1124
+boom-bap|hip-hop-rap|boom-bap|1125
+beat-tape|hip-hop-rap|beat-tape|1126
+hardcore|hip-hop-rap|hardcore|1127
+grime|hip-hop-rap|grime|1128
+experimental||experimental|11
+noise|experimental|noise|1097
+drone|experimental|drone|1098
+avant-garde|experimental|avant garde|1099
+experimental-rock|experimental|experimental rock|1100
+improvisation|experimental|improvisation|1101
+sound-art|experimental|sound art|1102
+musique-concrete|experimental|musique concrete|1103
+punk||punk|20
+hardcore-punk|punk|hardcore punk|1180
+garage|punk|garage|1181
+pop-punk|punk|pop punk|1182
+punk-rock|punk|punk rock|1183
+post-punk|punk|post-punk|1184
+post-hardcore|punk|post-hardcore|1185
+thrash|punk|thrash|1186
+crust-punk|punk|crust punk|1187
+folk-punk|punk|folk punk|1188
+emo|punk|emo|1189
+ska|punk|ska|1190
+no-wave|punk|no wave|1191
+folk||folk|12
+singer-songwriter|folk|singer-songwriter|1104
+folk-rock|folk|folk rock|1105
+indie-folk|folk|indie folk|1106
+pop-folk|folk|pop folk|1107
+traditional|folk|traditional|1108
+experimental-folk|folk|experimental folk|1109
+roots|folk|roots|1110
+pop||pop|19
+indie-pop|pop|indie pop|1169
+synth-pop|pop|synth pop|1170
+power-pop|pop|power pop|1171
+new-wave|pop|new wave|1172
+dream-pop|pop|dream pop|1173
+noise-pop|pop|noise pop|1174
+experimental-pop|pop|experimental pop|1175
+electro-pop|pop|electro pop|1176
+adult-contemporary|pop|adult contemporary|1177
+jangle-pop|pop|jangle pop|1178
+j-pop|pop|j-pop|1179
+ambient||ambient|3
+chill-out|ambient|chill-out|1022
+drone|ambient|drone|1023
+dark-ambient|ambient|dark ambient|1024
+electronic|ambient|electronic|1025
+soundscapes|ambient|soundscapes|1026
+field-recordings|ambient|field recordings|1027
+atmospheric|ambient|atmospheric|1028
+meditation|ambient|meditation|1029
+noise|ambient|noise|1030
+new-age|ambient|new age|1031
+idm|ambient|idm|1032
+industrial|ambient|industrial|1033
+soundtrack||soundtrack|24
+film-music|soundtrack|film music|1217
+video-game-music|soundtrack|video game music|1218
+video-game|soundtrack|video game|1219
+ost|soundtrack|ost|1220
+world||world|26
+latin|world|latin|1225
+roots|world|roots|1226
+african|world|african|1227
+tropical|world|tropical|1228
+tribal|world|tribal|1229
+brazilian|world|brazilian|1230
+celtic|world|celtic|1231
+world-fusion|world|world fusion|1232
+cumbia|world|cumbia|1233
+gypsy|world|gypsy|1234
+new-age|world|new age|1235
+balkan|world|balkan|1236
+reggaeton|world|reggaeton|1237
+jazz||jazz|15
+fusion|jazz|fusion|1129
+big-band|jazz|big band|1130
+nu-jazz|jazz|nu jazz|1131
+modern-jazz|jazz|modern jazz|1132
+swing|jazz|swing|1133
+free-jazz|jazz|free jazz|1134
+soul-jazz|jazz|soul jazz|1135
+latin-jazz|jazz|latin jazz|1136
+vocal-jazz|jazz|vocal jazz|1137
+bebop|jazz|bebop|1138
+spiritual-jazz|jazz|spiritual jazz|1139
+acoustic||acoustic|1
+folk|acoustic|folk|1001
+singer-songwriter|acoustic|singer-songwriter|1002
+rock|acoustic|rock|1003
+pop|acoustic|pop|1004
+guitar|acoustic|guitar|1005
+americana|acoustic|americana|1006
+electro-acoustic|acoustic|electro-acoustic|1007
+instrumental|acoustic|instrumental|1008
+piano|acoustic|piano|1009
+bluegrass|acoustic|bluegrass|1010
+roots|acoustic|roots|1011
+funk||funk|13
+funk-jam|funk|funk jam|1111
+deep-funk|funk|deep funk|1112
+funk-rock|funk|funk rock|1113
+jazz-funk|funk|jazz funk|1114
+boogie|funk|boogie|1115
+g-funk|funk|g-funk|1116
+rare-groove|funk|rare groove|1117
+electro|funk|electro|1118
+go-go|funk|go-go|1119
+r-b-soul||r&b/soul|21
+soul|r-b-soul|soul|1192
+r-b|r-b-soul|r&b|1193
+neo-soul|r-b-soul|neo-soul|1194
+gospel|r-b-soul|gospel|1195
+contemporary-r-b|r-b-soul|contemporary r&b|1196
+motown|r-b-soul|motown|1197
+urban|r-b-soul|urban|1198
+devotional||devotional|9
+christian|devotional|christian|1067
+gospel|devotional|gospel|1068
+meditation|devotional|meditation|1069
+spiritual|devotional|spiritual|1070
+worship|devotional|worship|1071
+inspirational|devotional|inspirational|1072
+classical||classical|5
+orchestral|classical|orchestral|1043
+neo-classical|classical|neo-classical|1044
+chamber-music|classical|chamber music|1045
+classical-piano|classical|classical piano|1046
+contemporary-classical|classical|contemporary classical|1047
+baroque|classical|baroque|1048
+opera|classical|opera|1049
+choral|classical|choral|1050
+modern-classical|classical|modern classical|1051
+avant-garde|classical|avant garde|1052
+reggae||reggae|22
+dub|reggae|dub|1199
+ska|reggae|ska|1200
+roots|reggae|roots|1201
+dancehall|reggae|dancehall|1202
+rocksteady|reggae|rocksteady|1203
+ragga|reggae|ragga|1204
+lovers-rock|reggae|lovers rock|1205
+podcasts||podcasts|27
+country||country|7
+bluegrass|country|bluegrass|1055
+country-rock|country|country rock|1056
+americana|country|americana|1057
+country-folk|country|country folk|1058
+alt-country|country|alt-country|1059
+country-blues|country|country blues|1060
+western|country|western|1061
+singer-songwriter|country|singer-songwriter|1062
+outlaw|country|outlaw|1063
+honky-tonk|country|honky-tonk|1064
+roots|country|roots|1065
+hillbilly|country|hillbilly|1066
+spoken-word||spoken word|25
+poetry|spoken-word|poetry|1221
+inspirational|spoken-word|inspirational|1222
+storytelling|spoken-word|storytelling|1223
+self-help|spoken-word|self-help|1224
+comedy||comedy|6
+improv|comedy|improv|1053
+stand-up|comedy|stand-up|1054
+blues||blues|4
+rhythm-blues|blues|rhythm & blues|1034
+blues-rock|blues|blues rock|1035
+country-blues|blues|country blues|1036
+boogie-woogie|blues|boogie-woogie|1037
+delta-blues|blues|delta blues|1038
+americana|blues|americana|1039
+electric-blues|blues|electric blues|1040
+gospel|blues|gospel|1041
+bluegrass|blues|bluegrass|1042
+kids||kids|16
+family-music|kids|family music|1140
+educational|kids|educational|1141
+music-therapy|kids|music therapy|1142
+lullaby|kids|lullaby|1143
+baby|kids|baby|1144
+audiobooks||audiobooks|28
+latin||latin|17
+brazilian|latin|brazilian|1145
+cumbia|latin|cumbia|1146
+tango|latin|tango|1147
+latin-rock|latin|latin rock|1148
+flamenco|latin|flamenco|1149
+salsa|latin|salsa|1150
+reggaeton|latin|reggaeton|1151
+merengue|latin|merengue|1152
+bolero|latin|bolero|1153
+méxico-d.f.|latin|méxico d.f.|1154
+bachata|latin|bachata|1155

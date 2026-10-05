@@ -1,0 +1,10 @@
+Country names and GeoNames ids
+
+Source: GeoNames, https://www.geonames.org/
+File: countryInfo.txt, https://download.geonames.org/export/dump/countryInfo.txt
+Downloaded 2026-09-28.
+Licence: Creative Commons Attribution 4.0 International (CC BY 4.0),
+https://creativecommons.org/licenses/by/4.0/ -- the full text is in this folder.
+
+Changes: only three columns are kept (country name, GeoNames id, ISO code), in
+podaci\drzave.txt. Nemoviz BC Finder uses them to ask Bandcamp for releases by country.

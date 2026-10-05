@@ -1,0 +1,18 @@
+Bandcamp
+
+Nemoviz BC Finder is not affiliated with, endorsed or sponsored by Bandcamp.
+Bandcamp is a trademark of its owner. The music, artwork and texts belong to their
+artists and labels.
+
+What the program uses, and nothing else:
+  * Bandcamp Discover (bandcamp.com/api/discover/1/discover_web), the same service
+    bandcamp.com/discover uses, and the one /api/ address Bandcamp's robots.txt allows;
+  * the Bandcamp embedded player (bandcamp.com/EmbeddedPlayer), for listening;
+  * links to release and artist pages, opened in your own browser.
+It does not read release pages or use Bandcamp search, streams or downloads outside the player, and it asks
+at most once every 1.5 seconds.
+
+The genre and subgenre list (podaci\zanrovi.txt) is taken from bandcamp.com/discover.
+
+Bandcamp's terms of use apply to everything heard and opened through it:
+https://bandcamp.com/terms_of_use

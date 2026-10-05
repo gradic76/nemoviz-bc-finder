@@ -1,0 +1,17 @@
+Nemoviz BC Finder 1.0
+Copyleft 2026 Nemoguća vizija, www.nemoviz.org
+Concept: Gordan Radić. Coding: Claude by Anthropic
+
+Nemoviz BC Finder is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, version 3 (see GPL-3.0.txt). It comes with NO WARRANTY.
+Source code: https://github.com/gradic76/nemoviz-bc-finder
+
+Components and data it carries, each under its own terms (see the other files here):
+  * Microsoft Edge WebView2 SDK (Microsoft.Web.WebView2.Core.dll,
+    Microsoft.Web.WebView2.Wpf.dll, WebView2Loader.dll) -- BSD-style licence by
+    Microsoft, with its third-party notices.
+  * Country data from GeoNames -- CC BY 4.0.
+  * The genre list and everything played -- Bandcamp; see Bandcamp.txt.
+
+Needs the Microsoft Edge WebView2 Runtime, which Windows 10 and 11 already have.

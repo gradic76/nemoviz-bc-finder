@@ -1,0 +1,70 @@
+Nemoviz BC Finder -- pretraga Bandcampa po drzavi i zanru, filtar po imenu
+(Gordan, 2026-09-28; zaseban projekt, nije dio NHR-a)
+OVO SU BILJESKE ZA RAZVOJ. Korisnicka pomoc je u samom programu (F1), kratka.
+
+PAKET
+  dist\Nemoviz-BC-Finder-1.0-portable.zip -- prenosiv. Sve sto program pamti
+  (jezik sucelja) ide u `data` pokraj njega; paket se gradi bez
+  `data`. Uvjeti pretrage se NE pamte.
+  Jezik sucelja: jezici\*.lang, redak `#culture=` za automatski izbor.
+  Nova lokalizacija: `bcf.exe --sprance <datoteka>`; u kodu L.T / L.F.
+
+POKRETANJE
+  bin\Nemoviz BC Finder.exe
+
+  Countries, Genres: izaberi u combo boxu pa Add; moze ih biti vise (bilo koja
+  od izabranih). Prva stavka "Any ..." je neutralna, Add na njoj prazni.
+  Sort: najnovije, najstarije, izvodac ili naslov A-Z i Z-A.
+  Search (Alt+S) trazi, Stop (ili Escape) prekida. More (Alt+M) ucita sljedecih
+  1000 (po paru drzava x zanr) -- Bandcamp ih za Hrvatsku ima 8679.
+  Name stoji ISPOD uvjeta: filtrira ono sto su uvjeti donijeli (Bandcampova
+  trazilica je programima zabranjena, robots.txt: /api/, /search). Enter u
+  polju filtrira odmah i skoci na popis.
+  U popisu (2026-10-05): Enter svira ovdje, Shift+Enter otvara stranicu
+  izdanja u pregledniku, Ctrl+Enter stranicu za preuzimanje (?action=download --
+  ista adresa koju koriste Bandcampove tipke "buy"; stranica se otvori s vec
+  otvorenim prozorom za kupnju ili preuzimanje), Ctrl+Shift+Enter stranicu
+  izvodaca; isto u kontekstnom izborniku (Applications, Shift+F10, desni klik).
+  Player: F5 prethodna, F6 play/pauza, F7 sljedeca, F8 stop (i na pocetak);
+  strelice lijevo/desno premotavaju 5 s, uz Shift 30 s (ne u tekstnom polju,
+  combo boxu ni izborniku); medijske tipke u cijelom Windowsu, osim ako ih
+  drzi drugi program (NHR) -- tada to kaze.
+  U retku pise ono sto nije zadano TOCNO JEDNOM:
+  drzava i zanr (uz "any" glavni zanr izvodaca, uz vise zanrova onaj pod kojim
+  je nadeno); uz jednu drzavu ostaje samo grad.
+  Free downloads only (uz Name, 2026-10-04): filtar nad nadenim, kao ime;
+  Discover sam kaze sto je besplatno.
+
+STO BANDCAMP DOPUSTA I STO SE KORISTI
+  * Discover (/api/discover/1/discover_web) -- jedina /api/ adresa koju njihov
+    robots.txt dopusta; ista koju koristi bandcamp.com/discover.
+    Jedan upit = jedna drzava; vise zanrova u jednom upitu znaci SVI odjednom,
+    pa se "bilo koji od" slaze iz vise upita. Po paru drzava x zanr najvise 1000.
+  * Svira SAMO Bandcampov ugradeni player (bandcamp.com/EmbeddedPlayer), sluzbeni
+    nacin slusanja izvan Bandcampa, u WebView2. Od 2026-10-05 USKI (size=small,
+    42 px; veliki je bio 150). Njegove tipke su goli divovi bez imena, pa ih nase
+    tipke pritiscu skriptom; next/prev su u uskom playeru skriveni, ali klik
+    skriptom radi (izmjereno). Nista se ne skida.
+  * PROFIL PREGLEDNIKA JE U %TEMP%\Nemoviz BC Finder\webview, ne u `data`:
+    izmjereno 2026-10-05, Gordanov `data` je narastao na 265 MB, od toga 223 MB
+    predmemorija. Predmemorija je ogranicena (--disk-cache-size i
+    --media-cache-size, 20 MB). BCF_BEZ_GRANICE=1 je kontrola za mjerenje.
+  * Ikona je u exeu (resurs), ne pokraj njega.
+  * Jedan upit svakih 1,5 s, uvijek.
+  * Jezicni uvjet je IZBACEN 2026-09-28 (Gordan: "presporo a i nema bas previse
+    smisla"). Bandcamp jezik ne zna, pa se citala stranica svakog izdanja.
+
+GRADNJA
+  bash "/d/Bandcamp Finder/gradi.sh"
+  bin\bcf.exe je isti program s konzolom, za mjerenje:
+    bcf.exe --proba HR,RS punk,post-punk 60
+    (drzave ISO kodom, zanrovi Bandcampovim slugom, najvise po paru)
+
+PODACI
+  podaci\drzave.txt   iz GeoNames countryInfo.txt (CC BY 4.0), ime|geonameid|ISO
+  podaci\zanrovi.txt  s bandcamp.com/discover: 27 zanrova i 237 podzanrova
+
+IZMJERENO 2026-09-28
+  * .NET prisiljen na TLS 1.2 dobiva 403 i na obicnoj stranici; s 1.3 prolazi.
+  * include_result_types "t" Bandcamp odbija (DiscoverWebException); "a" su
+    izdanja, i singlovi.
