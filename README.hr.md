@@ -52,6 +52,8 @@ Za uklanjanje je dovoljno obrisati mapu programa, a po želji i tu privremenu ma
 
 - **Ime**: prikazuje samo izdanja kojima izvođač ili naslov sadrži upisani tekst.
   Filtrira dok tipkaš; Enter filtrira odmah i prebacuje na popis.
+  Ako je ime upisano prije Traži, program učita sve za izabrane države i žanrove,
+  bez Još, i pokaže ono što odgovara; potrebna je barem jedna država ili žanr.
 - **Samo besplatno preuzimanje**: prikazuje samo izdanja koja se mogu besplatno
   preuzeti.
 
@@ -59,10 +61,12 @@ Za uklanjanje je dovoljno obrisati mapu programa, a po želji i tu privremenu ma
 
 | tipka | što radi |
 |---|---|
-| Enter ili dvoklik | svira izdanje u playeru ispod popisa |
+| Enter ili dvoklik | otvara album i pokazuje njegove pjesme na mjestu izdanja; singl odmah svira |
 | Shift+Enter | otvara stranicu izdanja u pregledniku |
 | Ctrl+Enter | otvara **stranicu za preuzimanje**: stranicu izdanja s već otvorenim Bandcampovim prozorom za kupnju ili preuzimanje |
 | Ctrl+Shift+Enter | otvara stranicu izvođača |
+| Enter u pjesmama albuma | svira album od te pjesme |
+| Backspace u pjesmama albuma | natrag na izdanja |
 | Applications, Shift+F10 ili desni klik | kontekstni izbornik s istim izborima |
 
 Kod besplatnih izdanja se u tom prozoru upiše iznos 0 i nastavi na preuzimanje.
@@ -103,6 +107,7 @@ svojim tipkama.
   ili preuzima, radi se na Bandcampu, u tvom pregledniku.
 - Pretraga po imenu nije Bandcampova, nego filtrira ono što je Discover već vratio,
   jer je Bandcampova tražilica programima zabranjena.
+- Popis pjesama albuma dolazi sa stranice Bandcampova ugrađenog playera, iste koja ga svira.
 
 Program nije povezan s Bandcampom niti ga Bandcamp podržava. Glazba, omoti i
 tekstovi pripadaju svojim izvođačima i izdavačima.

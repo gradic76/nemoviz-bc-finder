@@ -23,7 +23,8 @@ Mali samostalni program (2026-09-28, Gordanov zahtjev): pretraga Bandcampa **po 
   mjerenja: `--proba`, `--player-proba`, `--okvir`, `--sprance`). Paket
   `dist\Nemoviz-BC-Finder-portable.zip`, a raspakirana kopija je `dist\Nemoviz BC Finder`
   — **osvježi oboje**, Gordan pokreće iz raspakirane. Zip se radi s `tar.exe`
-  (Compress-Archive piše obrnute kose crte). Gradnja se provjerava (`grep -q "^gotovo"`)
+  (Compress-Archive piše obrnute kose crte), i to `/c/Windows/System32/tar.exe`: u Git Bashu
+  je `tar.exe` Gitov GNU tar koji tiho napravi tar umjesto zipa. Mapa `data` ne ide u zip. Gradnja se provjerava (`grep -q "^gotovo"`)
   prije pokretanja.
 
 ## Što radi
@@ -31,12 +32,18 @@ Mali samostalni program (2026-09-28, Gordanov zahtjev): pretraga Bandcampa **po 
 - Uvjeti: **Države** i **Žanrovi** (combo + Add + Clear + polje samo za čitanje; prva stavka
   „Any"; više izbora = bilo koji), **Poredak** (datum gore/dolje, izvođač i naslov A–Ž/Ž–A,
   mijenja se bez nove pretrage). Ispod: Traži (Alt+S), Još (Alt+M, sljedećih 1000 po paru),
-  Stop/Escape; zatim **Ime** (filtrira već dohvaćeno, Enter filtrira i skače u popis) i kvačica
+  Stop/Escape; zatim **Ime** (filtrira već dohvaćeno, Enter filtrira i skače u popis; od
+  2026-11-14 upisano ime prije Traži znači dohvat svih parova do kraja, bez Još, a bez države
+  i žanra pretraga odbija, jer cijeli Bandcamp ne može proći) i kvačica
   **Samo besplatno preuzimanje** (filtrira, ne pita Bandcamp ništa novo).
 - **Ništa se ne pamti** između pokretanja osim jezika sučelja (Gordan: uvjeti i filtri
   nikako). Jezični uvjet je **izbačen** 2026-09-28 („presporo a i nema baš previše smisla").
 - Redak: izvođač, album, mjesto/država, žanr (država i žanr samo kad nije izabran točno
   jedan), datum (samo dan, u Bandcampovom UTC-u), broj pjesama, „besplatno preuzimanje".
+- **Album se otvara na mjestu** (2026-11-14, kao u Racku): Enter na albumu pokazuje pjesme u
+  drugom popisu (iz `data-player-data` stranice EmbeddedPlayera, jedan upit po albumu), singl
+  odmah svira; u pjesmama Enter svira album od te pjesme (učita album pa Next N puta, jer
+  `track=ID` u embedu svira samo tu pjesmu), Backspace natrag. Sviraj ovdje je u izborniku.
 - **Player:** Bandcampov uski EmbeddedPlayer (`size=small`, 42 px) u WebView2, u Tab redu;
   predmemorija u `%TEMP%\Nemoviz BC Finder\webview`, ograničena (prije je u `data` narasla na
   265 MB). Tipke: Enter svira, Shift+Enter stranica izdanja, Ctrl+Enter stranica za preuzimanje
@@ -52,13 +59,17 @@ Mali samostalni program (2026-09-28, Gordanov zahtjev): pretraga Bandcampa **po 
 ## Pravila (Bandcamp)
 
 - Samo `/api/discover/1/discover_web` (robots.txt ga dopušta) i EmbeddedPlayer, **1 upit /
-  1,5 s**, UA „NemovizBCFinder/1.0". Zabranjeno: ostalo pod `/api/`, `/search`, `/stream`,
+  1,5 s**, UA „NemovizBCFinder/<inačica>". Zabranjeno: ostalo pod `/api/`, `/search`, `/stream`,
   `/download_check`; stranice izdanja se ne čitaju; poveznica za preuzimanje se ne vadi (to bi
   zaobišlo ono što je izvođač postavio, npr. e-mail za besplatno preuzimanje). Zvuk se nikad ne
   vadi mimo njihova playera.
 - Zamke: .NET na TLS 1.2 dobiva 403 (treba Tls13); `include_result_types` "t" se odbija, "a"
   su izdanja; jedan upit = jedna država, više oznaka u upitu = I, pa se „bilo koji" gradi iz
   parova; `result_count` daje ukupno (Hrvatska ≈ 8679).
+- 2026-11-13 Bandcamp je sva imena polja prebacio u camelCase (`resultCount`, `trackCount`);
+  `Polje()` prihvaća oba oblika. Simptom: „učitano 0 od 0".
+- Stranica: `size` prima do 1000, ali Bandcamp gradi 1000 oko 7 s, 200 oko 1 s; uz razmak 1,5 s
+  200 je jednako brzo i lakše za njih (izmjereno 2026-11-14: cijela Hrvatska 87 s).
 
 ## Povijest mape
 

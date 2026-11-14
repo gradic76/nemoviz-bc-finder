@@ -28,7 +28,7 @@ using System.Windows.Media.Imaging;
 static class Program
 {
     public const string Ime = "Nemoviz BC Finder";
-    public const string Verzija = "1.0";
+    public const string Verzija = "1.1";
     public const string Izvor = "https://github.com/gradic76/nemoviz-bc-finder";
 
     class Drzava { public string Ime, Iso; public long Geo; }
@@ -74,7 +74,13 @@ static class Program
         UcitajPodatke();
         L.Postavi(ZapamceniJezik());
         if (args.Length > 0 && args[0] == "--proba") return Proba(args);
-        if (args.Length > 1 && args[0] == "--player-proba") return ProbaPlayera(long.Parse(args[1]));
+        if (args.Length > 1 && args[0] == "--player-proba") return ProbaPlayera(long.Parse(args[1]), args.Length > 2 ? int.Parse(args[2]) : 0);
+        if (args.Length > 1 && args[0] == "--pjesme")
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            foreach (var t in Bandcamp.Pjesme(long.Parse(args[1]))) Console.WriteLine(t.Naslov + " | " + t.Izvodac + " | " + t.Sekundi);
+            return 0;
+        }
         if (args.Length > 0 && args[0] == "--okvir") return Okvir(args.Length > 1 ? args[1] : null);
         if (args.Length > 1 && args[0] == "--sprance")
         {
@@ -105,8 +111,9 @@ static class Program
     {
         public List<long> Geo = new List<long>();         // empty = anywhere
         public List<string> Tagovi = new List<string>();  // empty = any genre
-        public int NajviseZaPar = 1000;                   // per country x genre, each time
+        public int NajviseZaPar = Blok;                   // per country x genre, each time
     }
+    const int Blok = 1000;                                // what Search and More load per pair
 
     /// <summary>One country x genre pair and where its paging stands.</summary>
     class Par { public long Geo; public string Tag = ""; public string Cursor = "*"; public int Ukupno = -1, Dohvaceno; }
@@ -209,7 +216,7 @@ static class Program
     /// <summary>The player without disturbing anyone: a window off the screen, not
     /// activated, the sound muted. Load, seek, next, pause, stop -- each read back from
     /// the page itself; then what the small player has, and how big the profile is.</summary>
-    static int ProbaPlayera(long album)
+    static int ProbaPlayera(long album, int pjesma)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         var a = new Application();
@@ -219,7 +226,7 @@ static class Program
         w.Loaded += async (s, e) =>
         {
             Func<string, Task> stanje = async naziv => Console.WriteLine(naziv + ": " + await pl.StanjeZaProbu());
-            pl.Sviraj(new Bandcamp.Izdanje { Id = album, Tip = "a", Izvodac = "?", Naslov = "?" });
+            pl.Sviraj(new Bandcamp.Izdanje { Id = album, Tip = "a", Izvodac = "?", Naslov = "?" }, pjesma);
             await Task.Delay(6000); await stanje("poslije ucitavanja");
             Console.WriteLine("kontrole: " + await pl.KontroleZaProbu());
             // BCF_PUNI=1: walk every track to its end in 20-second jumps, so the cache
@@ -265,7 +272,7 @@ static class Program
                 u.Geo.Add(d.Geo);
             }
         if (a.Length > 2 && a[2] != "-") u.Tagovi.AddRange(a[2].Split(','));
-        int n; if (a.Length > 3 && int.TryParse(a[3], out n)) u.NajviseZaPar = n;
+        int n; if (a.Length > 3 && a[3] == "all") u.NajviseZaPar = int.MaxValue; else if (a.Length > 3 && int.TryParse(a[3], out n)) u.NajviseZaPar = n;
         var sve = new List<Bandcamp.Izdanje>();
         var sat = System.Diagnostics.Stopwatch.StartNew();
         string zadnje = "";
@@ -340,7 +347,9 @@ static class Program
             "Sort changes the order at once.",
             "Search starts, Stop or Escape stops. More loads the next thousand.",
             "Name, below: shows only the results whose artist or title contains this.",
-            "In the results: Enter plays the release here. Shift+Enter opens its page in the browser, Ctrl+Enter its download page, Ctrl+Shift+Enter the artist page.",
+            "With a name typed in, Search loads everything for the chosen countries and genres and shows what matches. At least one country or genre is needed.",
+            "In the results: Enter opens an album and shows its tracks; a single plays at once. Shift+Enter opens its page in the browser, Ctrl+Enter its download page, Ctrl+Shift+Enter the artist page.",
+            "In the tracks: Enter plays the album from that track, Backspace goes back to the releases.",
             "F5 previous track, F6 play or pause, F7 next track, F8 stop. The media keys work too.",
             "Left and right arrows rewind and fast forward 5 seconds, with Shift 30 seconds.",
             "The Applications key or a right click opens the menu of a release.",
@@ -603,6 +612,72 @@ static class Program
             if (x == null) { objavi(L.T("nothing selected")); return; }
             player.Sviraj(x);
         };
+
+        // AN ALBUM OPENS IN PLACE (Gordan, 2026-11-14, "like the rack"): Enter shows its
+        // tracks in a second list where the releases were, Backspace goes back. A second
+        // list, so a search still running fills the releases behind it undisturbed and the
+        // place in them is kept.
+        var pjesmeLista = new ListBox { Height = 380, Visibility = Visibility.Collapsed };
+        Bandcamp.Izdanje otvoreniAlbum = null, otvaram = null;
+        Action<ListBox> fokusiraj = l =>
+        {
+            if (l.Items.Count == 0) { l.Focus(); return; }
+            if (l.SelectedIndex < 0) l.SelectedIndex = 0;
+            l.UpdateLayout();
+            var it = l.ItemContainerGenerator.ContainerFromIndex(l.SelectedIndex) as ListBoxItem;
+            if (it != null) it.Focus(); else l.Focus();
+        };
+        Action<bool> natrag = fokus =>
+        {
+            otvaram = null;
+            if (otvoreniAlbum == null) return;
+            otvoreniAlbum = null;
+            pjesmeLista.Visibility = Visibility.Collapsed;
+            lista.Visibility = Visibility.Visible;
+            if (fokus) fokusiraj(lista);
+        };
+        Action otvoriAlbum = () =>
+        {
+            var x = izabrano();
+            if (x == null) { objavi(L.T("nothing selected")); return; }
+            if (x.Tip != "a" || x.Pjesama == 1) { player.Sviraj(x); return; }   // a single just plays
+            otvaram = x;
+            objavi(L.F("loading the tracks of {0} - {1}", x.Izvodac, x.Naslov));
+            var disp = lista.Dispatcher;
+            Task.Run(() =>
+            {
+                List<Bandcamp.Pjesma> l = null; string greska = null;
+                try { l = Bandcamp.Pjesme(x.Id); } catch (Exception e) { greska = e.Message; }
+                disp.BeginInvoke(new Action(() =>
+                {
+                    if (otvaram != x) return;                  // another one asked for meanwhile
+                    otvaram = null;
+                    if (greska != null) { objavi(L.F("Bandcamp did not answer: {0}", greska)); return; }
+                    if (l.Count == 0) { objavi(L.T("this release has no tracks to show")); return; }
+                    pjesmeLista.Items.Clear();
+                    Func<int, string> mmss = s => (s / 60) + ":" + (s % 60).ToString("00");
+                    for (int i = 0; i < l.Count; i++)
+                    {
+                        var t = l[i];
+                        bool drugi = t.Izvodac.Length > 0 && !string.Equals(t.Izvodac, x.Izvodac, StringComparison.CurrentCultureIgnoreCase);
+                        pjesmeLista.Items.Add(new ListBoxItem { Content = (i + 1) + ". " + t.Naslov + (drugi ? " - " + t.Izvodac : "") + (t.Sekundi > 0 ? ", " + mmss(t.Sekundi) : "") });
+                    }
+                    // The list's name is the album, so the reader says it on the way in.
+                    AutomationProperties.SetName(pjesmeLista, x.Izvodac + " - " + x.Naslov);
+                    otvoreniAlbum = x;
+                    lista.Visibility = Visibility.Collapsed;
+                    pjesmeLista.Visibility = Visibility.Visible;
+                    pjesmeLista.SelectedIndex = 0;
+                    fokusiraj(pjesmeLista);
+                }));
+            });
+        };
+        pjesmeLista.KeyDown += (s, e) =>
+        {
+            if (e.Key == Key.Back && Keyboard.Modifiers == ModifierKeys.None) { natrag(true); e.Handled = true; }
+            else if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.None && otvoreniAlbum != null)
+            { player.Sviraj(otvoreniAlbum, Math.Max(0, pjesmeLista.SelectedIndex)); e.Handled = true; }
+        };
         Action<bool> trazi = null;
         var tTrazi = Tipka(L.T("Search (Alt+S)"), () => trazi(false));
         var tJos = Tipka(L.T("More (Alt+M)"), () => trazi(true));
@@ -611,6 +686,7 @@ static class Program
         redak("Name", new UIElement[] { imePolje, samoBesplatno });
         stup.Children.Add(stanje);
         stup.Children.Add(lista);
+        stup.Children.Add(pjesmeLista);
         var ptipke = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 8, 0, 0) };
         ptipke.Children.Add(Tipka(L.T("Previous (F5)"), player.Prethodna));
         ptipke.Children.Add(Tipka(L.T("Play or pause (F6)"), player.PlayPauza));
@@ -627,7 +703,8 @@ static class Program
             return m;
         };
         var izbornik = new ContextMenu();
-        izbornik.Items.Add(stavkaIzbornika("Play here", "Enter", sviraj));
+        izbornik.Items.Add(stavkaIzbornika("Open album", "Enter", otvoriAlbum));
+        izbornik.Items.Add(stavkaIzbornika("Play here", "", sviraj));
         izbornik.Items.Add(stavkaIzbornika("Open release page", "Shift+Enter", otvori));
         izbornik.Items.Add(stavkaIzbornika("Open download page", "Ctrl+Enter", preuzmi));
         izbornik.Items.Add(stavkaIzbornika("Open artist page", "Ctrl+Shift+Enter", umjetnik));
@@ -700,6 +777,12 @@ static class Program
         {
             if (stop != null) { objavi(L.T("still searching; press Stop first")); return; }
             if (nastavi && (pretraga == null || !pretraga.ImaJos)) { objavi(L.T(pretraga == null ? "search first" : "that is all there is")); return; }
+            // A name typed in (Gordan, 2026-11-14): the program walks every chosen pair to its
+            // end and the filter shows what matches, so More is never needed. Without a country
+            // or a genre that would be all of Bandcamp, which cannot be walked.
+            bool poImenu = imePolje.Text.Trim().Length > 0;
+            if (!nastavi && poImenu && mojeDrzave.Count == 0 && mojiZanrovi.Count == 0)
+            { objavi(L.T("To search by name, choose at least one country or genre.")); return; }
             if (!nastavi)
             {
                 var u = new Upit
@@ -708,9 +791,11 @@ static class Program
                     Tagovi = new List<string>(mojiZanrovi)
                 };
                 pretraga = new Pretraga(u);
+                natrag(false);
                 nadeno.Clear(); prikazano.Clear(); lista.Items.Clear();
             }
             var pr = pretraga;
+            pr.U.NajviseZaPar = poImenu ? int.MaxValue : Blok;
             stop = new CancellationTokenSource();
             var tok = stop.Token;
             var disp = w.Dispatcher;
@@ -719,7 +804,7 @@ static class Program
             {
                 try
                 {
-                    Trazi(pr, s => disp.BeginInvoke(new Action(() => objavi(s))),
+                    Trazi(pr, s => disp.BeginInvoke(new Action(() => objavi(poImenu ? s + ", " + L.F("{0} releases shown", prikazano.Count) : s))),
                           l => { if (l.Count > 0) disp.BeginInvoke(new Action(() => umetni(l))); }, tok,
                           x => disp.BeginInvoke(new Action(() => osvjeziRedak(x))));
                 }
@@ -729,25 +814,31 @@ static class Program
                     bool prekinuto = tok.IsCancellationRequested;
                     stop = null;
                     objavi((prekinuto ? L.T("stopped,") + " " : "") + L.F("{0} releases shown; loaded {1} of {2}", prikazano.Count, pr.Dohvaceno, pr.Ukupno)
-                           + (pr.ImaJos ? ". " + L.F("More (Alt+M) loads the next {0}", pr.U.NajviseZaPar) : ", " + L.T("that is all")));
+                           + (pr.ImaJos ? ". " + L.F("More (Alt+M) loads the next {0}", Blok) : ", " + L.T("that is all")));
                 }));
             });
         };
 
-        lista.KeyDown += (s, e) =>
+        // The pages open the same from the tracks: the album stays selected behind them.
+        KeyEventHandler stranice = (s, e) =>
         {
-            if (e.Key != Key.Enter) return;
+            if (e.Key != Key.Enter || e.Handled) return;
             var mod = Keyboard.Modifiers;
             if (mod == (ModifierKeys.Control | ModifierKeys.Shift)) umjetnik();
             else if (mod == ModifierKeys.Control) preuzmi();
             else if (mod == ModifierKeys.Shift) otvori();
-            else sviraj();
+            else if (s == lista) otvoriAlbum();
+            else return;
             e.Handled = true;
         };
-        lista.MouseDoubleClick += (s, e) => sviraj();
+        lista.KeyDown += stranice;
+        pjesmeLista.KeyDown += stranice;
+        lista.MouseDoubleClick += (s, e) => otvoriAlbum();
+        pjesmeLista.MouseDoubleClick += (s, e) => { if (otvoreniAlbum != null) player.Sviraj(otvoreniAlbum, Math.Max(0, pjesmeLista.SelectedIndex)); };
         imePolje.KeyDown += (s, e) =>
         {
             if (e.Key != Key.Enter) return;
+            natrag(false);
             cekaj.Stop(); if (pretraga != null) slozi();
             e.Handled = true;
             if (lista.Items.Count > 0) { var it = lista.ItemContainerGenerator.ContainerFromIndex(Math.Max(0, lista.SelectedIndex)) as ListBoxItem; if (it != null) it.Focus(); else lista.Focus(); }

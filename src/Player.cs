@@ -77,6 +77,11 @@ sealed class Player
             await Task.Delay(700);
             await Skripta("var b=document.querySelector('#big_play_button'); if(b) b.click();");
             sviraSe = true;
+            // A track further in: Next as many times as needed. MEASURED 2026-11-14: the
+            // embed's own track=ID plays that one track only, Next stays on it.
+            if (preskoci > 0)
+                await Skripta("(function(){var b=document.querySelector('.nextbutton');if(b)for(var i=0;i<" + preskoci + ";i++)b.click();})()");
+            preskoci = 0;
             await Task.Delay(1200);
             await KaziNaslov(L.T("playing") + " ");
         };
@@ -84,13 +89,18 @@ sealed class Player
         spreman = true;
     }
 
-    public async void Sviraj(Bandcamp.Izdanje x)
+    int preskoci;
+
+    /// <summary>`pjesma` (0-based place in the album) is where the album starts; the
+    /// player then goes on through the album as usual.</summary>
+    public async void Sviraj(Bandcamp.Izdanje x, int pjesma = 0)
     {
         try
         {
             await Pripremi();
             tekuce = x;
             sviraSe = false;
+            preskoci = pjesma;
             javi(L.F("loading {0} - {1}", x.Izvodac, x.Naslov));
             Pogled.CoreWebView2.Navigate("https://bandcamp.com/EmbeddedPlayer/" + (x.Tip == "t" ? "track=" : "album=") + x.Id
                                          + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/");

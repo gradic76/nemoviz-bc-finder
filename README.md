@@ -54,16 +54,21 @@ To remove the program, delete its folder, and the temp folder if you like.
 
 - **Name**: shows only the releases whose artist or title contains the text. It
   filters as you type; Enter filters at once and moves to the list.
+  If a name is typed in before Search, the program loads everything for the chosen
+  countries and genres, without More, and shows what matches; at least one country
+  or genre is needed.
 - **Free downloads only**: shows only the releases that can be downloaded for free.
 
 **Results**
 
 | key | what it does |
 |---|---|
-| Enter or double click | plays the release in the player below the list |
+| Enter or double click | opens an album and shows its tracks in place of the releases; a single plays at once |
 | Shift+Enter | opens the release page in the browser |
 | Ctrl+Enter | opens the **download page**: the release page with Bandcamp's buy or download dialog already open |
 | Ctrl+Shift+Enter | opens the artist page |
+| Enter in an album's tracks | plays the album from that track |
+| Backspace in an album's tracks | back to the releases |
 | Applications, Shift+F10 or right click | context menu with the same choices |
 
 For a free release, enter 0 as the amount in that dialog and go on to the download.
@@ -104,6 +109,7 @@ the program drives it with its own keys.
   bought or downloaded is done on Bandcamp, in your browser.
 - The name search is not Bandcamp's; it filters what Discover has already returned,
   because Bandcamp's search is closed to programs.
+- An album's track list comes from the page of Bandcamp's embedded player, the one that plays it.
 
 The program is not affiliated with or endorsed by Bandcamp. The music, artwork and
 texts belong to their artists and labels.

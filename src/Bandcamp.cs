@@ -11,6 +11,7 @@
 // (The language condition, which read release pages, was taken out on 2026-09-28:
 // too slow, and of little use -- Gordan.)
 //
+// 2. The EMBEDDED PLAYER page, for playing and, since 2026-11-14, for an album's track list.
 // Nothing else: no release pages, no search API (/api/ is disallowed), no stream, no download. Albums are
 // opened in the browser and listened to there. One request every 1.5 s, always.
 using System;
@@ -23,7 +24,7 @@ using System.Web.Script.Serialization;
 
 static class Bandcamp
 {
-    const string Predstavljanje = "NemovizBCFinder/1.0 (personal, non-commercial)";
+    const string Predstavljanje = "NemovizBCFinder/1.1 (personal, non-commercial)";
     const int RazmakMs = 1500;
     static DateTime zadnji = DateTime.MinValue;
     static readonly object brava = new object();
@@ -109,8 +110,12 @@ static class Bandcamp
     static object Polje(object o, string k)
     {
         var d = o as Dictionary<string, object>;
+        if (d == null) return null;
         object v;
-        return d != null && d.TryGetValue(k, out v) ? v : null;
+        if (d.TryGetValue(k, out v)) return v;
+        // 2026-11-13 Bandcamp switched every key to camelCase (result_count -> resultCount);
+        // accept both, so a switch back does not break the search again.
+        return d.TryGetValue(Regex.Replace(k, "_([a-z])", m => m.Groups[1].Value.ToUpperInvariant()), out v) ? v : null;
     }
     static string Tekst(object o, string k) { var v = Polje(o, k); return v == null ? "" : Convert.ToString(v, System.Globalization.CultureInfo.InvariantCulture); }
     static System.Collections.IEnumerable Niz(object o) { return o as System.Collections.IEnumerable; }
@@ -127,7 +132,7 @@ static class Bandcamp
             { "geoname_id", geo },
             { "slice", "new" },
             { "cursor", cursor },
-            { "size", 60 },
+            { "size", 200 },   // measured 2026-11-14: up to 1000 is accepted, but past ~200 Bandcamp takes longer to build a page than the 1.5 s gap, so bigger is no faster
             { "include_result_types", new[] { "a" } }         // "a" = releases, singles too; "t" is refused, "s" is merch
         });
         string odg = Dohvati("https://bandcamp.com/api/discover/1/discover_web", tijelo);
@@ -163,6 +168,33 @@ static class Bandcamp
             l.Add(i);
         }
         if (l.Count == 0) cursor = null;
+        return l;
+    }
+
+    public class Pjesma { public string Naslov = "", Izvodac = ""; public int Sekundi; }
+
+    static readonly Dictionary<long, List<Pjesma>> pjesme = new Dictionary<long, List<Pjesma>>();
+
+    /// <summary>The tracks of an album (Gordan, 2026-11-14: Enter opens an album, as in
+    /// NHR). From the EMBEDDED PLAYER page -- the same page the player loads, which
+    /// carries the whole track list in data-player-data -- not from the release page.
+    /// One request per album, kept for the run.</summary>
+    public static List<Pjesma> Pjesme(long album)
+    {
+        lock (pjesme) { List<Pjesma> bio; if (pjesme.TryGetValue(album, out bio)) return bio; }
+        string html = Dohvati("https://bandcamp.com/EmbeddedPlayer/album=" + album + "/size=small/bgcol=ffffff/linkcol=0687f5/transparent=true/", null);
+        var m = Regex.Match(html, "data-player-data=\"([^\"]*)\"");
+        if (!m.Success) throw new InvalidOperationException("no track list in the player");
+        var d = new JavaScriptSerializer { MaxJsonLength = 16 * 1024 * 1024 }.DeserializeObject(WebUtility.HtmlDecode(m.Groups[1].Value));
+        var l = new List<Pjesma>();
+        var niz = Niz(Polje(d, "tracks"));
+        if (niz != null)
+            foreach (object t in niz)
+            {
+                double s; double.TryParse(Tekst(t, "duration"), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out s);
+                l.Add(new Pjesma { Naslov = Tekst(t, "title"), Izvodac = Tekst(t, "artist"), Sekundi = (int)Math.Round(s) });
+            }
+        lock (pjesme) pjesme[album] = l;
         return l;
     }
 
