@@ -9,7 +9,7 @@ Mali samostalni program (2026-09-28, Gordanov zahtjev): pretraga Bandcampa **po 
 ## Stanje
 
 - **Objavljen 2026-10-05:** javni repozitorij https://github.com/gradic76/nemoviz-bc-finder
-  (grana `main`, jedan commit „Nemoviz BC Finder 1.0"), izdanje **v1.0**. Izravna poveznica
+  (grana `main`), izdanja **v1.0** i **v1.1** (2026-11-14: popravak camelCase, pretraga po imenu, album na Enter). Izravna poveznica
   `…/releases/latest/download/Nemoviz-BC-Finder-portable.zip` — zato zip **nema broj
   inačice u imenu**; sljedeća inačica = novo izdanje sa zipom istog imena.
 - Licenca koda **GPL-3** (`LICENSE`, u paketu `GPL-3.0.txt`); rečenica „za osobnu,
